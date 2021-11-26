@@ -9,13 +9,15 @@ Created on Sat Jun 19 10:55:44 2021
 import json
 import pandas as pd
 import math
-import numpy as np
 
 #load keypoints json as dataframe 
 def load_json_keypoints(file):
     #讀入json
-    with open(file) as obj:
-        data = json.load(obj)
+    try:
+        with open(file) as obj:
+            data = json.load(obj)
+    except Exception as e:
+        print(e)
     
     #篩選資料，以下為取出第一個人的keypoints
     people = data['people'][0]
@@ -37,6 +39,24 @@ def load_json_keypoints(file):
         
     return df
 
+def load_np_ndarray(input):
+    if input is None:
+        return None
+    #製作dataframe
+    input_df = pd.DataFrame(input[0])
+    f = {"x":[], "y":[], "c":[]}
+    df = pd.DataFrame(f)
+    
+    #keypoints中有75筆資料
+    #每三筆一組，分別是x座標、y座標、檢測置信度；共25組，對應25個關鍵點
+    for i in range(0, 25):
+        new = pd.DataFrame.from_dict({"x": [input_df[0].iloc[i]],
+                                      "y": [input_df[1].iloc[i]],
+                                      "c": [input_df[2].iloc[i]]})
+        df = df.append(new, ignore_index = True)
+        
+    return df
+
 #the similarity between two keypoints
 def calculateRatioWith2Points(df1, df2, p1, p2):
     #算出在正常座標平面中ˋ，這一段骨架分別在兩張圖片中對x軸的弧度(夾角) 
@@ -50,7 +70,8 @@ def calculateRatioWith2Points(df1, df2, p1, p2):
     cos = math.cos(radian1 - radian2)
     #cos = -1相似度為-100%，cos = 0相似度為0%，cos = 1相似度為100%
     #標準化為0 ~ 100%
-    ratio = (cos * 100 + 100) / 2
+    ratio = cos * 100
+    #ratio = (cos * 100 + 100) / 2
     #print(ratio)
     return ratio
 
@@ -85,14 +106,21 @@ def compareRatio(df1, df2):
     for x in ratioList:
         sum += x
     result = sum / len(ratioList)
+    if result < 0:
+        result = 0
     return result
 
 def suggest(df1, df2):
     suggestion = ""
     return suggestion
-        
+
+fileName1 = "C1.jpg"
+fileName2 = "C2.jpg"
+     
 '''
-df1 = load_json_keypoints("mypose_1_keypoints.json")
-df2 = load_json_keypoints("mypose_2_keypoints.json")
-print(compareRatio(df1, df2))
+df1 = load_json_keypoints(".\\data\\output_jsons\\" + fileName1 + "\\0_keypoints.json")
+df2 = load_json_keypoints(".\\data\\output_jsons\\" + fileName2 + "\\0_keypoints.json")
+print("相似度為:"+str(compareRatio(df1, df2)))
 '''
+
+

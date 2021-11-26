@@ -11,11 +11,11 @@ import random
 import time
 from flask import Flask, jsonify, request
 from flask_cors import cross_origin
-#from flask_mail import Mail
-#from flask_mail import Message
+from flask_mail import Mail
+from flask_mail import Message
 from threading import Thread
 #from celery import Celery
-from catch_keypoints import catch_keypoints
+from catch_keypoints import catch_keypoints, catch_video_keypoints
 from similarity import load_json_keypoints, compareRatio
 
 app = Flask(__name__)
@@ -29,7 +29,7 @@ app.config.update(
     MAIL_PASSWORD='-z-z-z-r-5-6-7-9'
 )
 
-#mail = Mail(app)
+mail = Mail(app)
 
 '''
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME') 
@@ -318,19 +318,22 @@ def SendMail():
 @cross_origin()
 def uploadImage():
     time_receive = time.time()
-    # 接收圖片
-    upload_file = request.files['file']
-    # 獲取圖片名
-    file_name = upload_file.filename
-    # 圖片路徑
-    file_path="data/images"
-    if upload_file:
-        # 地址拼接
-        file_paths = os.path.join(file_path, file_name)
-        # 保存接收的圖片至指定路徑
-        upload_file.save(file_paths)
-        print("saving completed")
-        
+    try:        
+        # 接收圖片
+        upload_file = request.files['file']
+        # 獲取圖片名
+        file_name = upload_file.filename
+        # 圖片路徑
+        file_path="data/images"
+        if upload_file:
+            # 地址拼接
+            file_paths = os.path.join(file_path, file_name)
+            # 保存接收的圖片至指定路徑
+            upload_file.save(file_paths)
+            print("saving completed")
+    except:
+        send = {"message":"upload_false", "rate":"0", "isPostSuccess":"false", "suggestion":"None"}
+        return jsonify(send)
     time_analyze = time.time()
     # 分析圖片
     print("start analyzing...")
@@ -365,10 +368,15 @@ def uploadVideo():
     if upload_file:
         # 地址拼接
         file_paths = os.path.join(file_path, file_name)
-        # 保存接收的圖片至指定路徑
+        # 保存接收的影片至指定路徑
         upload_file.save(file_paths)
         print("saving completed")
-    return "success"
+    
+    result = catch_video_keypoints(file_name)
+    if result == True:
+        return "success"
+    else:
+        return "The video is upload failed", 500
 
 @app.route('/Upload/AroundImage', methods=['POST'])
 @cross_origin()

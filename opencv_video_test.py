@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Oct  7 14:48:30 2021
+Created on Fri Oct  8 14:43:02 2021
 
-@author: winston
+@author: User
 """
 
 import numpy as np
@@ -12,14 +11,17 @@ import os
 import sys
 from sys import platform
 
+fileName = "push_up_1.MOV"
+front_fileName = fileName.split('.', 1)[0]
+
 # Import Openpose (Windows/Ubuntu/OSX)
 dir_path = os.path.dirname(os.path.realpath(__file__))
 try:
     # Windows Import
     if platform == "win32":
         # Change these variables to point to the correct folder (Release/x64 etc.)
-        sys.path.append(dir_path + '/../../python/openpose/Release');
-        os.environ['PATH']  = os.environ['PATH'] + ';' + dir_path + '/../../x64/Release;' +  dir_path + '/../../bin;'
+        sys.path.append(dir_path + '\\openpose\\build\\python\\openpose\\Release');
+        os.environ['PATH'] +=  dir_path + '\\openpose\\build\\x64\\Release;' + dir_path + '\\openpose\\build\\bin;'
         import pyopenpose as op
     else:
         # Change these variables to point to the correct folder (Release/x64 etc.)
@@ -34,9 +36,7 @@ except ImportError as e:
 # Custom Params (refer to include/openpose/flags.hpp for more parameters)
 params = dict()
 params["model_folder"] = "./openpose/models/"
-#設定keypoints輸出路徑
-params["write_json"] = "data/output_jsons/" + "output_json_1/"
-params["write_image"] = "data/output_images/" + "output_image_1"
+params["write_json"] = "data/output_jsons/" + front_fileName + "/"
 params["display"] = 0
 
 try:
@@ -46,8 +46,7 @@ try:
     opWrapper.start()
     # Process Image
     datum = op.Datum()
-    #讀取影片
-    cap = cv2.VideoCapture("./data/videos/push_up_1.MOV")
+    cap = cv2.VideoCapture("./data/videos/"+fileName)
     #video_output_name = "output_video.avi"
     #out = cv2.VideoCapture("./data/output_videos/" + video_output_name)
     #cap = cv2.VideoCapture(0)
@@ -68,41 +67,19 @@ try:
             height, width, layers = opframe.shape
             if video == None:
                 fourcc = cv2.VideoWriter_fourcc('M', 'P', '4', 'V')
-                #影片output路徑
-                video = cv2.VideoWriter('./data/output_videos/output_video_1.avi', fourcc, fps, (width, height))
+                video = cv2.VideoWriter('./data/output_videos/output_' + front_fileName + '.mp4', fourcc, fps, (width, height))
             video.write(opframe)
             print("Frame_%d is completed."%count)
+            #cv2.imshow("OpenPose 1.7.0 - Tutorial Python API", datum.cvOutputData)
+            #cv2.waitKey(0)
         else:
             break
-    cv2.destroyAllWindows()  
+    cv2.destroyAllWindows()
     video.release()
+    
 
 except Exception as e:
     print(e)
     sys.exit(-1)
 
 print("ALL COMPLETED!!!")
-
-'''
-# current camera
-cap = cv2.VideoCapture(0)
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('output.avi', fourcc, 20, (640, 480))
-while (cap.isOpened()):
-    ret, frame = cap.read()
-    if ret == True:
-        out.write(frame)
-        cv2.imshow('frame', frame)
-
-        key = cv2.waitKey(1)
-        # ESC
-        if key == 27:
-            break
-
-    else:
-        break
-
-cap.release()
-out.release()
-cv2.destroyAllWindows()
-'''
