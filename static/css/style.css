@@ -1,0 +1,28 @@
+/*鏡像程式碼*/
+.flip-x {
+	filter: FlipH; /* IE only */
+	-moz-transform: matrix(-1, 0, 0, 1, 0, 0);
+	-webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+圖片疊加
+#IMG_1{
+　position:absolute;
+　top:10px;
+　left:10px;
+  background-color: darkgoldenrod;
+　z-index:5;
+}
+
+#IMG_2{
+　position:absolute;
+　top:30px;
+　left:30px;
+　background-color:#6DA9E7;
+　z-index:10;
+}
+
+header {
+  font-size:50px;
+  padding: 5px;
+}

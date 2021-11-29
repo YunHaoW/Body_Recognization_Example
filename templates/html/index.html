@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    </head>
+<body>
+<style>
+/*鏡像程式碼*/
+.flip-x {
+	filter: FlipH; /* IE only */
+	-moz-transform: matrix(-1, 0, 0, 1, 0, 0);
+	-webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+圖片疊加
+#IMG_1{
+　position:absolute;
+　top:10px;
+　left:10px;
+  background-color: darkgoldenrod;
+　z-index:5;
+}
+
+#IMG_2{
+　position:absolute;
+　top:30px;
+　left:30px;
+　background-color:#6DA9E7;
+　z-index:10;
+}
+</style>
+<nav class="navbar navbar-dark bg-primary">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">肢體辨識健身系統</a>
+      </div>
+      <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">影片比對<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">圖片比對</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+<div class="container">
+<div class="row">
+    <h3>動作解析</h3>
+</div>
+<div class="row">
+    <h3 class="col-2">相似度為:</h3>
+    <h2 class="col-10" id="similarity_value">{{text}}</h2>
+</div>
+<div class="row">
+    <!--<div class="col-6">
+        <img id="IMG_1" width=100% src="{{ url_for('video_feed') }}" class="flip-x">
+    </div>-->
+    <div class="col-6">
+        <img id="IMG_2" src="{{ url_for('camera_feed') }}" class="flip-x">
+    </div>
+    <!--<div>
+        <img id="IMG_2" width=540 height=960 src="{{ url_for('video_feed') }}" class="flip-x">
+        <img src="{{ url_for('camera_feed') }}" class="flip-x">
+    </div>--> 
+</div>    
+<div class="row">
+    <!-- <div>
+        <img width=50% height=100% src="{{url_for('static', filename='RH.JPG')}}" alt="受試圖片" class="flip-x"/>
+    </div> -->
+    <div>
+        
+    </div>
+</div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>

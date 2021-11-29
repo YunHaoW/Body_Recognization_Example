@@ -314,7 +314,7 @@ def SendMail():
     thr.start()
     return str(CertificationCode)
 
-@app.route('/Upload/Image', methods=['POST'])
+@app.route('/Upload/Image', methods=['POST','GET'])
 @cross_origin()
 def uploadImage():
     time_receive = time.time()

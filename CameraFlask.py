@@ -65,7 +65,7 @@ try:
         import pyopenpose as op
     else:
         # Change these variables to point to the correct folder (Release/x64 etc.)
-        sys.path.append('./openpose/build/python');
+        sys.path.append('./../openpose/build/python');
         # If you run `make install` (default path is `/usr/local/python` for Ubuntu), you can also access the OpenPose/python module from there. This will install OpenPose and the python library at your desired installation path. Ensure that this is in your python path in order to use it.
         # sys.path.append('/usr/local/python')
         from openpose import pyopenpose as op
@@ -75,7 +75,7 @@ except ImportError as e:
     
 # Custom Params (refer to include/openpose/flags.hpp for more parameters)
 params = dict()
-params["model_folder"] = "./openpose/models/"
+params["model_folder"] = "./../openpose/models/"
 params["write_json"] = "data/output_jsons/" + front_fileName + "/"
 #params["write_images"] = "data/output_images/" + front_fileName + "/"
 params["display"] = 0
@@ -95,7 +95,7 @@ fileName1 = "push_up_1.MOV"
 
 #df1 = pd.DataFrame([])
 #df1 = load_json_keypoints("./data/output_jsons/output_json_1/1_keypoints.json")
-df1 = load_json_keypoints("./data/output_jsons/RH.JPG/0_keypoints.json")
+df1 = load_json_keypoints("./data/output_jsons/mypose_2.jpg/0_keypoints.json")
 '''
 keypoints_list = []
 front_fileName = "VIDEO0068"
@@ -188,6 +188,27 @@ def get_output_video(fileName):  #傳入原檔案名(無骨架)
 def get_ratio():        
     return cmp
 
+@app.route('/get_app_ratio', methods=['POST', 'GET'])
+def get_scene():
+    try:        
+        # 接收圖片
+        upload_file = request.files['file']
+        # 獲取圖片名
+        file_name = upload_file.filename
+        # 圖片路徑
+        file_path="data/images"
+        if upload_file:
+            # 地址拼接
+            file_paths = os.path.join(file_path, file_name)
+            # 保存接收的圖片至指定路徑
+            upload_file.save(file_paths)
+            print("saving completed")
+    except:
+        send = {"message":"upload_false", "rate":"0", "isPostSuccess":"false", "suggestion":"None"}
+        return jsonify(send)
+    keypoints, image = catch_keypoints(file_name)
+        
+
 @app.route('/camera_feed')
 def camera_feed():
     #接收鏡頭路由
@@ -221,7 +242,7 @@ def uploadVideo():
 
 @app.route('/')
 def index():
-   return render_template('index.html', suggestions=cmp)
+   return render_template('html/index.html', suggestions=cmp)
 
 if __name__ == '__main__':
     torch.cuda.empty_cache()
