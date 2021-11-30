@@ -12,20 +12,22 @@ import math
 
 #load keypoints json as dataframe 
 def load_json_keypoints(file):
+    
+    #製作dataframe
+    f = {"x":[], "y":[], "c":[]}
+    df = pd.DataFrame(f)
+    
     #讀入json
     try:
         with open(file) as obj:
             data = json.load(obj)
     except Exception as e:
+        return df
         print(e)
-    
+        
     #篩選資料，以下為取出第一個人的keypoints
     people = data['people'][0]
     keypoints = people["pose_keypoints_2d"]
-    
-    #製作dataframe
-    f = {"x":[], "y":[], "c":[]}
-    df = pd.DataFrame(f)
     
     #keypoints中有75筆資料
     #每三筆一組，分別是x座標、y座標、檢測置信度；共25組，對應25個關鍵點
@@ -59,6 +61,9 @@ def load_np_ndarray(input):
 
 #the similarity between two keypoints
 def calculateRatioWith2Points(df1, df2, p1, p2):
+    ratio = 0
+    if df1.empty or df2.empty:
+        return ratio
     #算出在正常座標平面中ˋ，這一段骨架分別在兩張圖片中對x軸的弧度(夾角) 
     #由於圖片分析完的y軸遞增方向與正常座標平面的y軸遞增方向相反，因此y座標部分倒過來減
     radian1 = math.atan2((df1['y'].iloc[p2] - df1['y'].iloc[p1]),\
@@ -122,5 +127,7 @@ df1 = load_json_keypoints(".\\data\\output_jsons\\" + fileName1 + "\\0_keypoints
 df2 = load_json_keypoints(".\\data\\output_jsons\\" + fileName2 + "\\0_keypoints.json")
 print("相似度為:"+str(compareRatio(df1, df2)))
 '''
+#df3 = load_json_keypoints("./data/output_jsons/VIDEO0068/460_keypoints.json")
+
 
 
