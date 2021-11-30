@@ -148,6 +148,7 @@ def gen_frames():
                 # print("相似度為"+str(compareRatio(df1, df2)))
                 #print(df2)
                 print("=======================================")
+                print(df2)
                 global cmp
                 cmp = str(compareRatio(df1, df2))
                 
@@ -272,7 +273,7 @@ def app_camera_feed():
     if cmp != None:
         send["isPostSuccess"] = "true"
     print("相似度為:%s"%cmp)
-    return jsonify(send)
+    return str(cmp)
 
 @app.route('/Upload/Image', methods=['POST'])
 @cross_origin()

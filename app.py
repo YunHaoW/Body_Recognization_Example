@@ -413,5 +413,5 @@ def send_async_email(app, msg):
 
 
 if __name__ == "__main__":
-    app.run(debug=False, host='0.0.0.0', port=3000)
+    app.run(debug=False, host='0.0.0.0', port=6666)
     sys.exit()
