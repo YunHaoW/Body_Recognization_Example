@@ -52,7 +52,9 @@
       </div>
     </div>
 </nav>
+
 <div class="container">
+<div class="row"><h1></h1></div>
 <div class="row">
     <h3>動作解析</h3>
 </div>
@@ -62,23 +64,16 @@
 </div>
 <div class="row">
     <div class="col-6">
-        <img id="IMG_1" width=100% src="{{ url_for('video_feed') }}" class="flip-x">
+        <img id="IMG_1" width=100% src="{{ url_for('video_feed', videoName='VIDEO0068.mp4') }}" class="flip-x">
     </div>
     <div class="col-6">
         <img id="IMG_2" src="{{ url_for('camera_feed') }}" class="flip-x">
     </div>
-    <!--<div>
-        <img id="IMG_2" width=540 height=960 src="{{ url_for('video_feed') }}" class="flip-x">
-        <img src="{{ url_for('camera_feed') }}" class="flip-x">
-    </div>--> 
 </div>    
 <div class="row">
     <!-- <div>
         <img width=50% height=100% src="{{url_for('static', filename='RH.JPG')}}" alt="受試圖片" class="flip-x"/>
     </div> -->
-    <div>
-        
-    </div>
 </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
