@@ -164,18 +164,18 @@ def gen_frames():
 
 def get_output_video(fileName):  #傳入原檔案名(無骨架)
     front_fileName = fileName.split('.', 1)[0]
-    fpsLimit = 10
     #影片輸出
     while True:
         cap = cv2.VideoCapture("./data/output_videos/output_" + front_fileName + ".mp4")
         count = 1
         startTime = time.time()
         while (cap.isOpened()):
-            print(count)
+            
             global df1
             df1 = load_json_keypoints('./data/output_jsons/' + front_fileName + '/' + str(count) + '_keypoints.json')
             if df1.empty:
                 break;
+            
             #global keypoints_list
             #df1 = keypoints_list[count - 1]
             '''
@@ -185,20 +185,20 @@ def get_output_video(fileName):  #傳入原檔案名(無骨架)
             '''
             success, vframe = cap.read()
             nowTime = time.time()
-            if (int(nowTime - startTime)) > fpsLimit:
-                if not success:
-                    break
-                else:
-                    #flipframe = cv2.flip(opframe, 1)
-                    #start = time.time()
-                    ret, buffer = cv2.imencode('.jpg', vframe)       
-                    frame = buffer.tobytes()
-                    yield (b'--frame\r\n'
-                           b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-                    #end = time.time()
-                    #print("video:%f"%(end-start))
-                    startTime = time.time() # reset time
-                    count = count + 1
+            #if (int(nowTime - startTime)) > fpsLimit:
+            if not success:
+                break
+            else:
+                #flipframe = cv2.flip(opframe, 1)
+                #start = time.time()
+                ret, buffer = cv2.imencode('.jpg', vframe)       
+                frame = buffer.tobytes()
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+                #end = time.time()
+                #print("video:%f"%(end-start))
+                startTime = time.time() # reset time
+                count = count + 1
 
 @app.route('/get_ratio', methods=['GET'])
 def get_ratio():        
@@ -210,10 +210,10 @@ def camera_feed():
     return Response(gen_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/video_feed')
-def video_feed():
+@app.route('/video_feed/<videoName>', methods=['POST', 'GET'])
+def video_feed(videoName):
     #接收影片路由
-    return Response(get_output_video('VIDEO0068.mp4'), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(get_output_video(videoName), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/upload/video', methods=['POST'])
 def uploadVideo():
