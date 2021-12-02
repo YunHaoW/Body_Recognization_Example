@@ -5,21 +5,20 @@
 	-webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
 }
 
-圖片疊加
-#IMG_1{
-　position:absolute;
-　top:10px;
-　left:10px;
-  background-color: darkgoldenrod;
-　z-index:5;
-}
-
-#IMG_2{
-　position:absolute;
-　top:30px;
-　left:30px;
-　background-color:#6DA9E7;
-　z-index:10;
+.box1{
+  top: 565px;
+  left: 600px;
+    background-color: #f1939c;
+    position: relative;
+    z-index: 2;
+  }
+  
+.box2{
+  top: 200px;
+  background-color: #c21f30;
+  position: absolute;
+  bottom:0px;
+  right:0px;
 }
 
 header {

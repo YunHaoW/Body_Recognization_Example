@@ -86,7 +86,7 @@ except ImportError as e:
 # Custom Params (refer to include/openpose/flags.hpp for more parameters)
 params = dict()
 params["model_folder"] = "./openpose/models/"
-params["write_json"] = "data/output_jsons/" + front_fileName + "/"
+#params["write_json"] = "data/output_jsons/" + front_fileName + "/"
 #params["write_images"] = "data/output_images/" + front_fileName + "/"
 params["display"] = 0
 
@@ -102,6 +102,8 @@ opframe = None
 #####################
 #比較的動作
 fileName1 = "push_up_1.MOV"
+global videoName 
+videoName = ""
 
 #df1 = pd.DataFrame([])
 #df1 = load_json_keypoints("./data/output_jsons/output_json_1/1_keypoints.json")
@@ -150,7 +152,7 @@ def gen_frames():
                 print("=======================================")
                 global cmp
                 cmp = str(compareRatio(df1, df2))
-                
+                    
             #flipframe = cv2.flip(opframe, 1)
             #start2 = time.time()
             ret, buffer = cv2.imencode('.jpg', opframe)            
@@ -164,6 +166,7 @@ def gen_frames():
 
 def get_output_video(fileName):  #傳入原檔案名(無骨架)
     front_fileName = fileName.split('.', 1)[0]
+    print("目前播放"+fileName)
     #影片輸出
     while True:
         cap = cv2.VideoCapture("./data/output_videos/output_" + front_fileName + ".mp4")
@@ -175,6 +178,7 @@ def get_output_video(fileName):  #傳入原檔案名(無骨架)
             df1 = load_json_keypoints('./data/output_jsons/' + front_fileName + '/' + str(count) + '_keypoints.json')
             if df1.empty:
                 break;
+            
             
             #global keypoints_list
             #df1 = keypoints_list[count - 1]
@@ -189,6 +193,7 @@ def get_output_video(fileName):  #傳入原檔案名(無骨架)
             if not success:
                 break
             else:
+            #elif count % 2 == 1:
                 #flipframe = cv2.flip(opframe, 1)
                 #start = time.time()
                 ret, buffer = cv2.imencode('.jpg', vframe)       
@@ -198,7 +203,7 @@ def get_output_video(fileName):  #傳入原檔案名(無骨架)
                 #end = time.time()
                 #print("video:%f"%(end-start))
                 startTime = time.time() # reset time
-                count = count + 1
+            count = count + 1
 
 @app.route('/get_ratio', methods=['GET'])
 def get_ratio():        
@@ -210,10 +215,11 @@ def camera_feed():
     return Response(gen_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/video_feed/<videoName>', methods=['POST', 'GET'])
-def video_feed(videoName):
-    #接收影片路由
-    return Response(get_output_video(videoName), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/video_feed', methods=['POST', 'GET'])
+def video_feed():
+    #接收影片路由 
+    if(videoName != ""):
+        return Response(get_output_video(videoName), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/upload/video', methods=['POST'])
 def uploadVideo():
@@ -621,6 +627,15 @@ def SendMail():
 def index():
    return render_template('index.html', suggestions=cmp)
 
+@app.route('/comparison/<video>')
+def comparison(video):
+    global videoName
+    videoName = str(video)
+    print("傳送參數:" + videoName)
+    time.sleep(1)
+    return render_template('comparison.html', suggestion=cmp)
+
+    
 def send_async_email(app, msg):
     #  下面有說明
     with app.app_context():

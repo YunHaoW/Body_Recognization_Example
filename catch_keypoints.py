@@ -142,7 +142,7 @@ def catch_video_keypoints(videoName):
                 hasframe, frame= cap.read()
         
                 if hasframe== True:
-                    frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+                    #frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
                     datum.cvInputData = frame
                     datum.name=str(count) #for each frame the count is prefixed for the output json file name. This way we get individual file for each frame.
                     opWrapper.emplaceAndPop(op.VectorDatum([datum]))
@@ -153,7 +153,7 @@ def catch_video_keypoints(videoName):
                         fourcc = cv2.VideoWriter_fourcc('M', 'P', '4', 'V')
                         video = cv2.VideoWriter('./data/output_videos/output_' + front_videoName +'.mp4', fourcc, fps, (width, height))
                     video.write(opframe)
-                    print("Frame_%d is completed."%count)
+                    print("Frame_%d has been completed."%count)
                 else:
                     break
             cv2.destroyAllWindows()  
@@ -178,8 +178,8 @@ def testPrint():
 keypoints, image = catch_keypoints("RH.JPG")
 print(keypoints)
 '''
-'''
-result = catch_video_keypoints('IMG_1412.MOV')
-'''
+
+result = catch_video_keypoints('video_0006.mp4')
+
 
 

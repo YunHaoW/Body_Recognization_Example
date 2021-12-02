@@ -9,8 +9,9 @@ Created on Sat Jun 19 10:55:44 2021
 import json
 import pandas as pd
 import math
+import time
 
-#load keypoints json as dataframe 
+#load keypoints json as dataframe
 def load_json_keypoints(file):
     
     #製作dataframe
@@ -115,17 +116,16 @@ def compareRatio(df1, df2):
         result = 0
     return result
 
-def suggest(df1, df2):
-    suggestion = ""
-    return suggestion
-
 fileName1 = "C1.jpg"
 fileName2 = "C2.jpg"
      
+startTime = time.time()
 '''
 df1 = load_json_keypoints(".\\data\\output_jsons\\" + fileName1 + "\\0_keypoints.json")
 df2 = load_json_keypoints(".\\data\\output_jsons\\" + fileName2 + "\\0_keypoints.json")
 print("相似度為:"+str(compareRatio(df1, df2)))
+endTime = time.time()
+print(endTime-startTime)
 '''
 #df3 = load_json_keypoints("./data/output_jsons/VIDEO0068/460_keypoints.json")
 
